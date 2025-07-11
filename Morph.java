@@ -14,7 +14,7 @@ public class Morph {
 
     public static String binarize(
             Iterable<String> tokens) throws BadTokenException {
-        return mapJoin(tokens, (String token) -> {
+        return mapJoin(tokens, token -> {
             return switch (token) {
                 case "yes" -> "1";
                 case "no" -> "0";
