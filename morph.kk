@@ -1,4 +1,4 @@
-pub fun main(): <console,exn> ()
+fun main(): <console,exn> ()
   val entries = vector([
     vector(["yes", "no", "yes"]),
     vector(["yes", "no", "maybe"]),
@@ -10,12 +10,12 @@ pub fun main(): <console,exn> ()
         _ -> throw-exn(exn)
     println(entry.binarize)
 
-pub fun binarize(tokens: vector<string>): exn string
+fun binarize(tokens: vector<string>): exn string
   map-join(tokens) fn(token)
     match token
       "yes" -> "1"
       "no" -> "0"
       _ -> throw("bad token")
 
-pub fun map-join(items: vector<t>, f: (t) -> e string): e string
+fun map-join(items: vector<t>, f: (t) -> e string): e string
   items.map(f).join("")

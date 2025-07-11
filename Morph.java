@@ -2,7 +2,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Morph {
+class Morph {
     public static void main(String[] args) {
         var entries = List.of(
                 List.of("yes", "no", "yes"),
@@ -16,10 +16,10 @@ public class Morph {
         }
     }
 
-    public static class BadTokenException extends Exception {
+    static class BadTokenException extends Exception {
     }
 
-    public static String binarize(
+    static String binarize(
             Collection<String> tokens) throws BadTokenException {
         try {
             return mapJoin(tokens, token -> {
@@ -37,11 +37,11 @@ public class Morph {
         }
     }
 
-    public interface Fun<A, B, E extends Exception> {
+    interface Fun<A, B, E extends Exception> {
         B apply(A a) throws E;
     }
 
-    public static <T, E extends Exception> String mapJoin(
+    static <T, E extends Exception> String mapJoin(
             Collection<T> items, Fun<T, String, E> fun) throws E {
         return items.stream()
                 .map(item -> {
@@ -54,7 +54,7 @@ public class Morph {
                 .collect(Collectors.joining());
     }
 
-    public static String binarizeBetter(
+    static String binarizeBetter(
             Collection<String> tokens) throws BadTokenException {
         return mapJoinBetter(tokens, token -> {
             return switch (token) {
@@ -65,7 +65,7 @@ public class Morph {
         });
     }
 
-    public static <T, E extends Exception> String mapJoinBetter(
+    static <T, E extends Exception> String mapJoinBetter(
             Collection<T> items, Fun<T, String, E> fun) throws E {
         var builder = new StringBuilder();
         for (var item : items) {
