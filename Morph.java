@@ -35,13 +35,7 @@ public class Morph {
         }
         return builder.toString();
         // return items.stream()
-        //         .map(item -> {
-        //             try {
-        //                 return fun.apply(item);
-        //             } catch (Throwable e) {
-        //                 throw new RuntimeException(e);
-        //             }
-        //         })
+        //         .map(item -> fun.apply(item))
         //         .collect(Collectors.joining());
     }
 
