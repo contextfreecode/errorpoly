@@ -17,7 +17,42 @@ public class Morph {
 
     public static String binarize(
             Collection<String> tokens) throws BadTokenException {
-        return mapJoin(tokens, token -> {
+        try {
+            return mapJoin(tokens, token -> {
+                return switch (token) {
+                    case "yes" -> "1";
+                    case "no" -> "0";
+                    default -> throw new BadTokenException();
+                };
+            });
+        } catch (RuntimeException e) {
+            switch (e.getCause()) {
+                case BadTokenException b -> throw b;
+                default -> throw e;
+            }
+        }
+    }
+
+    public interface Fun<A, B, E extends Exception> {
+        B apply(A a) throws E;
+    }
+
+    public static <T, E extends Exception> String mapJoin(
+            Collection<T> items, Fun<T, String, E> fun) throws E {
+        return items.stream()
+                .map(item -> {
+                    try {
+                        return fun.apply(item);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.joining());
+    }
+
+    public static String binarizeBetter(
+            Collection<String> tokens) throws BadTokenException {
+        return mapJoinBetter(tokens, token -> {
             return switch (token) {
                 case "yes" -> "1";
                 case "no" -> "0";
@@ -26,32 +61,7 @@ public class Morph {
         });
     }
 
-    public interface Fun<A, B, E extends Throwable> {
-        B apply(A a) throws E;
-    }
-
-    public static <T, E extends Throwable> String mapJoin(
-            Collection<T> items, Fun<T, String, E> fun) throws E {
-        try {
-            return items.stream()
-                    .map(item -> {
-                        try {
-                            return fun.apply(item);
-                        } catch (Throwable e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .collect(Collectors.joining());
-        } catch (RuntimeException e) {
-            var cause = e.getCause();
-            if (cause instanceof Error) {
-                throw (Error)cause;
-            }
-            throw e;
-        }
-    }
-
-    public static <T, E extends Throwable> String mapJoinBetter(
+    public static <T, E extends Exception> String mapJoinBetter(
             Collection<T> items, Fun<T, String, E> fun) throws E {
         var builder = new StringBuilder();
         for (var item : items) {
