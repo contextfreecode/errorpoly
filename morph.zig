@@ -41,7 +41,7 @@ pub fn mapJoin(
     freeing: bool,
     func: anytype,
     args: anytype,
-) WithErrType(ReturnType(func), error{OutOfMemory}, []const u8) {
+) WithExtraErr(ReturnType(func), error{OutOfMemory}![]const u8) {
     var buffer = std.ArrayList(u8).init(allocator);
     defer buffer.deinit();
     for (items) |item| {
@@ -54,14 +54,27 @@ pub fn mapJoin(
     return buffer.toOwnedSlice();
 }
 
-fn WithErrType(T: type, E: type, Value: type) type {
-    const info = @typeInfo(T);
-    return if (info == .error_union)
-        (info.error_union.error_set || E)!Value
-    else
-        E!Value;
-}
-
 fn ReturnType(func: anytype) type {
     return @typeInfo(@TypeOf(func)).@"fn".return_type.?;
+}
+
+fn WithExtraErr(E: type, R: type) type {
+    // Extra errors from E.
+    const err_info = @typeInfo(E);
+    const extra = if (err_info == .error_union)
+        err_info.error_union.error_set
+    else
+        error{};
+    // Errors from R.
+    const ret_info = @typeInfo(R);
+    const ret_err = if (ret_info == .error_union)
+        ret_info.error_union.error_set
+    else
+        error{};
+    // Main return type.
+    const ret = if (ret_info == .error_union)
+        ret_info.error_union.payload
+    else
+        R;
+    return (extra || ret_err)!ret;
 }
