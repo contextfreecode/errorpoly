@@ -30,9 +30,8 @@ where
     F: Fn(&T) -> Result<S, E>,
     S: ToString,
 {
-    let mut out = String::new();
-    for item in items {
-        out.push_str(&f(item)?.to_string());
-    }
-    Ok(out)
+    items.iter().try_fold(String::new(), |mut text, item| {
+        text.push_str(&f(item)?.to_string());
+        Ok(text)
+    })
 }
