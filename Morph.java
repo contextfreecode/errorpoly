@@ -1,5 +1,5 @@
+import java.util.Collection;
 import java.util.List;
-// import java.util.Collection;
 // import java.util.stream.Collectors;
 
 public class Morph {
@@ -13,7 +13,7 @@ public class Morph {
     }
 
     public static String binarize(
-            Iterable<String> tokens) throws BadTokenException {
+            Collection<String> tokens) throws BadTokenException {
         return mapJoin(tokens, token -> {
             return switch (token) {
                 case "yes" -> "1";
@@ -28,20 +28,22 @@ public class Morph {
     }
 
     public static <T, E extends Throwable> String mapJoin(
-            Iterable<T> items, Fun<T, String, E> fun) throws E {
+            Collection<T> items, Fun<T, String, E> fun) throws E {
         var builder = new StringBuilder();
         for (var item : items) {
             builder.append(fun.apply(item));
         }
         return builder.toString();
+        // return items.stream()
+        //         .map(item -> {
+        //             try {
+        //                 return fun.apply(item);
+        //             } catch (Throwable e) {
+        //                 throw new RuntimeException(e);
+        //             }
+        //         })
+        //         .collect(Collectors.joining());
     }
-
-    // public static <T, E extends Throwable> String mapJoinSad(
-    //         Collection<T> items, Fun<T, String, E> fun) throws E {
-    //     return items.stream()
-    //             .map(item -> fun.apply(item))
-    //             .collect(Collectors.joining());
-    // }
 
     public static class BadTokenException extends Exception {
         public BadTokenException() {
