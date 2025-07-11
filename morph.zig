@@ -3,7 +3,7 @@ const Allocator = std.mem.Allocator;
 
 pub fn main() error{OutOfMemory}!void {
     const allocator = std.heap.page_allocator;
-    const entries = [_][]const []const u8{
+    const entries = &[_][]const []const u8{
         &.{ "yes", "no", "yes" },
         &.{ "yes", "no", "maybe" },
     };
