@@ -1,4 +1,4 @@
-pub fun main()
+pub fun main(): <console,exn> ()
   val entries = vector([
     vector(["yes", "no", "yes"]),
     vector(["yes", "no", "maybe"]),

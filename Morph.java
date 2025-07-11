@@ -1,6 +1,6 @@
 import java.util.Collection;
 import java.util.List;
-// import java.util.stream.Collectors;
+import java.util.stream.Collectors;
 
 public class Morph {
     public static void main(String[] args) throws Exception {
@@ -10,6 +10,9 @@ public class Morph {
         for (var entry : entries) {
             System.out.println(binarize(entry));
         }
+    }
+
+    public static class BadTokenException extends Exception {
     }
 
     public static String binarize(
@@ -29,19 +32,31 @@ public class Morph {
 
     public static <T, E extends Throwable> String mapJoin(
             Collection<T> items, Fun<T, String, E> fun) throws E {
+        try {
+            return items.stream()
+                    .map(item -> {
+                        try {
+                            return fun.apply(item);
+                        } catch (Throwable e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .collect(Collectors.joining());
+        } catch (RuntimeException e) {
+            var cause = e.getCause();
+            if (cause instanceof Error) {
+                throw (Error)cause;
+            }
+            throw e;
+        }
+    }
+
+    public static <T, E extends Throwable> String mapJoinBetter(
+            Collection<T> items, Fun<T, String, E> fun) throws E {
         var builder = new StringBuilder();
         for (var item : items) {
             builder.append(fun.apply(item));
         }
         return builder.toString();
-        // return items.stream()
-        //         .map(item -> fun.apply(item))
-        //         .collect(Collectors.joining());
-    }
-
-    public static class BadTokenException extends Exception {
-        public BadTokenException() {
-            super();
-        }
     }
 }
