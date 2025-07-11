@@ -1,6 +1,6 @@
 pub fun main()
-  println(binarize(texts))
-  println(binarize(texts2))
+  entries.foreach fn(entry)
+    println(entry.binarize)
 
 pub fun binarize(texts: vector<string>): exn string
   map-join(texts) fn(text)
@@ -12,5 +12,7 @@ pub fun binarize(texts: vector<string>): exn string
 pub fun map-join(items: vector<t>, f: (t) -> e string): e string
   items.map(f).join("")
 
-val texts = vector(["yes", "no", "yes"])
-val texts2 = vector(["yes", "no", "maybe"])
+val entries = vector([
+  vector(["yes", "no", "yes"]),
+  vector(["yes", "no", "maybe"]),
+])
