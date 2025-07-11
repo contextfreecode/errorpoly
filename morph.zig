@@ -59,7 +59,7 @@ fn WithErrType(T: type, E: type, Value: type) type {
     return if (info == .error_union)
         (info.error_union.error_set || E)!Value
     else
-        Value;
+        E!Value;
 }
 
 fn ReturnType(func: anytype) type {
