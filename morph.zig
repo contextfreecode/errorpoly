@@ -63,6 +63,5 @@ fn WithErrType(T: type, E: type, Value: type) type {
 }
 
 fn ReturnType(func: anytype) type {
-    const ti = @typeInfo(@TypeOf(func));
-    return ti.@"fn".return_type.?;
+    return @typeInfo(@TypeOf(func)).@"fn".return_type.?;
 }
