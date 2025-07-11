@@ -3,12 +3,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Morph {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var entries = List.of(
                 List.of("yes", "no", "yes"),
                 List.of("yes", "no", "maybe"));
         for (var entry : entries) {
-            System.out.println(binarize(entry));
+            try {
+                System.out.println(binarize(entry));
+            } catch (BadTokenException e) {
+                System.out.println("bad token");
+            }
         }
     }
 

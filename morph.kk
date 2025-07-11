@@ -4,6 +4,10 @@ pub fun main(): <console,exn> ()
     vector(["yes", "no", "maybe"]),
   ])
   entries.foreach fn(entry)
+    with final ctl throw-exn(exn)
+      match exn.message
+        "bad token" -> println(exn.message)
+        _ -> throw-exn(exn)
     println(entry.binarize)
 
 pub fun binarize(tokens: vector<string>): exn string
