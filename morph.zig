@@ -41,7 +41,9 @@ pub fn mapJoin(
     freeing: bool,
     func: anytype,
     args: anytype,
-) WithExtraErr(ReturnType(func), error{OutOfMemory}![]const u8) {
+    // Standard inference just works here, so manual effort unneeded:
+    // ) WithExtraErr(ReturnType(func), error{OutOfMemory}![]const u8) {
+) ![]const u8 {
     var buffer = std.ArrayList(u8).init(allocator);
     defer buffer.deinit();
     for (items) |item| {
@@ -53,6 +55,8 @@ pub fn mapJoin(
     }
     return buffer.toOwnedSlice();
 }
+
+// Below functions aren't actually needed.
 
 fn ReturnType(func: anytype) type {
     return @typeInfo(@TypeOf(func)).@"fn".return_type.?;
